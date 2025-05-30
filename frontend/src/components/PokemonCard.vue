@@ -40,9 +40,9 @@ const toggleFavorite = () => {
 
 <style scoped>
 .pokemon_card_container {
-  border: 1px solid green;
   border-radius: 5px;
   transition: .3s ease-in-out;
+  height: 60px;
 
   &:hover {
     box-shadow: -5px 5px 7px -1px rgba(0, 0, 0, 0.5);

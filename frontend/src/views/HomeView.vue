@@ -3,6 +3,7 @@ import { usePokemonStore } from '@/stores/pokemon';
 import FilterInput from '@/components/FilterInput.vue';
 import PokemonCard from '@/components/PokemonCard.vue';
 import { onMounted } from 'vue';
+import 'primeicons/primeicons.css'
 
 const pokemonStore = usePokemonStore();
 
@@ -40,9 +41,15 @@ const loadPokemons = () => {
       No hay Pokémones cargados. Haz clic en "Cargar Más Pokémons"
     </p>
 
-    <button @click.prevent="loadPokemons" :disabled="pokemonStore.isLoading" class="load_more_button">
-      Cargar Más Pokémons
-    </button>
+    <div class="filter_buttons_container">
+      <button @click.prevent="loadPokemons" :disabled="pokemonStore.isLoading" class="load_more_button">
+        <i class="pi pi-list" style="font-size: 1.5rem"></i> All
+      </button>
+
+      <button @click.prevent="loadPokemons" :disabled="pokemonStore.isLoading" class="load_more_button">
+        <i class="pi pi-star-fill" style="font-size: 1.5rem"></i> Favorites
+      </button>
+    </div>
   </div>
 </template>
 
@@ -100,37 +107,50 @@ const loadPokemons = () => {
     border-radius: var(--border-radius-base);
   }
 
-  & .load_more_button {
-    display: block;
-    width: 100%;
-    padding: 15px 25px;
-    background-color: var(--color-accent-orange);
-    color: white;
-    border: none;
-    border-radius: var(--border-radius-base);
-    font-size: 1.2rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.1s ease;
-    margin-top: var(--spacing-medium);
-    margin-bottom: var(--spacing-large);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  & .filter_buttons_container {
+    display: flex;
+    gap: 15px;
+    justify-content: space-between;
+    align-items: center;
 
-    &:hover:not(:disabled) {
-      background-color: darken(var(--color-accent-orange), 10%);
-    }
+    & .load_more_button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 0px;
+      width: 50%;
+      background-color: var(--color-primary-red);
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease, transform 0.1s ease;
+      margin-top: var(--spacing-medium);
+      margin-bottom: var(--spacing-large);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
-    &:disabled {
-      background-color: var(--color-light-gray);
-      cursor: not-allowed;
-      box-shadow: none;
+      &:hover:not(:disabled) {
+        background-color: darken(var(--color-accent-orange), 10%);
+      }
+
+      &:disabled {
+        background-color: var(--color-light-gray);
+        cursor: not-allowed;
+        box-shadow: none;
+      }
     }
   }
 
+
+
   & .pokemon_grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    padding: 0 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
     gap: 10px;
-    justify-content: center;
     overflow-y: auto;
     height: 78vh;
   }
