@@ -56,6 +56,10 @@ const toggleFavorite = () => {
     align-items: center;
     padding: 0 10px;
 
+    &:hover{
+      cursor: pointer;
+    }
+
     & .pokemon_name {
       font-weight: bold;
       text-transform: capitalize;

@@ -22,7 +22,6 @@ const searchTerm = computed({
 .filter_input_container {
   position: relative;
   
-
   & .filter_icon {
     position: absolute;
     top: 11px;
