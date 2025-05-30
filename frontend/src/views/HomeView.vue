@@ -1,52 +1,95 @@
 <script setup>
-import { usePokemonStore } from '@/stores/pokemon';
-import FilterInput from '@/components/FilterInput.vue';
-import PokemonCard from '@/components/PokemonCard.vue';
-import { onMounted } from 'vue';
-import 'primeicons/primeicons.css'
+import { usePokemonStore } from "@/stores/pokemon";
+import FilterInput from "@/components/FilterInput.vue";
+import PokemonCard from "@/components/PokemonCard.vue";
+import { onMounted } from "vue";
+import "primeicons/primeicons.css";
 
 const pokemonStore = usePokemonStore();
 
 onMounted(() => {
+  pokemonStore.loadFavoritesFromLocalStorage();
   pokemonStore.fetchPokemons();
-})
+});
 
-const loadPokemons = () => {
-  pokemonStore.fetchPokemons();
-}
+const showAllPokemons = () => {
+  pokemonStore.setFilter("all");
+};
+
+const showFavoritePokemons = () => {
+  pokemonStore.setFilter("favorites");
+};
+
 </script>
 
 <template>
   <div class="home_view_container">
-    <p v-if="pokemonStore.isLoading && pokemonStore.allPokemons.length === 0" class="loading_message">
+    <p
+      v-if="pokemonStore.isLoading && pokemonStore.allPokemons.length === 0"
+      class="loading_message"
+    >
       Cargando Pokémons...
     </p>
-    <p v-if="pokemonStore.error" class="error_message">{{ pokemonStore.error }}</p>
+    <p v-if="pokemonStore.error" class="error_message">
+      {{ pokemonStore.error }}
+    </p>
 
     <div class="filter_container">
       <FilterInput />
     </div>
 
     <div v-if="pokemonStore.filteredPokemons.length" class="pokemon_grid">
-      <PokemonCard v-for="pokemon in pokemonStore.filteredPokemons" :key="pokemon.id" :pokemon="pokemon" />
+      <PokemonCard
+        v-for="pokemon in pokemonStore.filteredPokemons"
+        :key="pokemon.id"
+        :pokemon="pokemon"
+      />
     </div>
 
-    <p v-else-if="!pokemonStore.isLoading && pokemonStore.searchTerm && pokemonStore.filteredPokemons.length === 0"
-      class="no_resilts_message">
+    <p
+      v-else-if="
+        !pokemonStore.isLoading &&
+        pokemonStore.searchTerm &&
+        pokemonStore.filteredPokemons.length === 0
+      "
+      class="no_results_message"
+    >
       No se encontraron Pokémones con ese nombre.
     </p>
 
-    <p v-else-if="!pokemonStore.isLoading && !pokemonStore.error && pokemonStore.allPokemons.length === 0"
-      class="no_pokemons_message">
+    <p
+      v-else-if="
+        !pokemonStore.isLoading &&
+        !pokemonStore.error &&
+        pokemonStore.allPokemons.length === 0
+      "
+      class="no_pokemons_message"
+    >
       No hay Pokémones cargados. Haz clic en "Cargar Más Pokémons"
     </p>
 
     <div class="filter_buttons_container">
-      <button @click.prevent="loadPokemons" :disabled="pokemonStore.isLoading" class="load_more_button">
+      <button
+        @click.prevent="showAllPokemons"
+        :disabled="pokemonStore.isLoading"
+        class="load_more_button"
+        :class="{
+          'active-filter': pokemonStore.currentFilter === 'all',
+          'inactive-filter': pokemonStore.currentFilter === 'favorites',
+        }"
+      >
         <i class="pi pi-list" style="font-size: 1.5rem"></i> All
       </button>
 
-      <button @click.prevent="loadPokemons" :disabled="pokemonStore.isLoading" class="load_more_button">
+      <button
+        @click.prevent="showFavoritePokemons"
+        :disabled="pokemonStore.isLoading"
+        class="load_more_button"
+        :class="{
+          'active-filter': pokemonStore.currentFilter === 'favorites',
+          'inactive-filter': pokemonStore.currentFilter === 'all',
+        }"
+      >
         <i class="pi pi-star-fill" style="font-size: 1.5rem"></i> Favorites
       </button>
     </div>
@@ -66,7 +109,10 @@ const loadPokemons = () => {
     margin-bottom: 10px;
   }
 
-  & .loading_message {
+  & .loading_message,
+  & .error_message,
+  & .no_results_message,
+  & .no_pokemons_message {
     text-align: center;
     margin-top: var(--spacing-medium);
     font-style: italic;
@@ -76,35 +122,10 @@ const loadPokemons = () => {
   }
 
   & .error_message {
-    text-align: center;
-    margin-top: var(--spacing-medium);
-    font-style: italic;
-    color: var(--color-medium-gray);
-    padding: var(--spacing-small);
-    border-radius: var(--border-radius-base);
-
     color: var(--color-secondary-red);
     background-color: #ffebee;
     border: 1px solid var(--color-secondary-red);
     font-weight: bold;
-  }
-
-  & .no_resilts_message {
-    text-align: center;
-    margin-top: var(--spacing-medium);
-    font-style: italic;
-    color: var(--color-medium-gray);
-    padding: var(--spacing-small);
-    border-radius: var(--border-radius-base);
-  }
-
-  & .no_pokemons_message {
-    text-align: center;
-    margin-top: var(--spacing-medium);
-    font-style: italic;
-    color: var(--color-medium-gray);
-    padding: var(--spacing-small);
-    border-radius: var(--border-radius-base);
   }
 
   & .filter_buttons_container {
@@ -120,7 +141,7 @@ const loadPokemons = () => {
       gap: 10px;
       padding: 12px 0px;
       width: 50%;
-      background-color: var(--color-primary-red);
+      /* background-color: var(--color-primary-red); */
       color: white;
       border: none;
       border-radius: 30px;
@@ -132,18 +153,30 @@ const loadPokemons = () => {
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 
       &:hover:not(:disabled) {
-        background-color: darken(var(--color-accent-orange), 10%);
+        filter: brightness(0.9);
       }
 
       &:disabled {
         background-color: var(--color-light-gray);
+        color: var(--color-medium-gray);
         cursor: not-allowed;
         box-shadow: none;
       }
     }
   }
 
+  & .active-filter {
+    background-color: var(--color-primary-red); 
+    color: white; 
+    font-weight: bold;
+    border: 2px solid var(--color-primary-red); 
+  }
 
+  & .inactive-filter {
+    background-color: #5e5e5e; 
+    color: white; 
+    border: 2px solid #5e5e5e; 
+  }
 
   & .pokemon_grid {
     padding: 0 10px;

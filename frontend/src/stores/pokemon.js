@@ -1,43 +1,69 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
-import { fetchPokemonList, fetchPokemonDetailsByName } from "@/services/pokeapi";
+import {
+  fetchPokemonList,
+  fetchPokemonDetailsByName,
+} from "@/services/pokeapi";
 
-export const usePokemonStore = defineStore('pokemon', () => {
+export const usePokemonStore = defineStore("pokemon", () => {
   const pokemons = ref([]);
   const favoritePokemons = ref([]);
   const isLoading = ref(false);
   const error = ref(null);
   const nextUrl = ref(null);
-  const searchTerm = ref('');
-
+  const searchTerm = ref("");
+  const currentFilter = ref("all");
   const allPokemons = computed(() => pokemons.value);
-  const getPokemonDetails = computed(() => (name) => pokemons.value.find(p => p.name === name));
+  const getPokemonDetails = computed(
+    () => (name) => pokemons.value.find((p) => p.name === name)
+  );
   const isFavorite = computed(() => (pokemonId) => {
-    return Array.isArray(favoritePokemons.value) && favoritePokemons.value.some(fav => fav.id === pokemonId);
-  });
-  const filteredPokemons = computed(() => {
-    if (!searchTerm.value) {
-      return pokemons.value;
-    }
-    const lowerCaseSearchTerm = searchTerm.value.toLowerCase();
-    return pokemons.value.filter(pokemon =>
-      pokemon.name.toLowerCase().includes(lowerCaseSearchTerm)
+    return (
+      Array.isArray(favoritePokemons.value) &&
+      favoritePokemons.value.some((fav) => fav.id === pokemonId)
     );
+  });
+
+  const filteredPokemons = computed(() => {
+    let basePokemons = [];
+
+    if (currentFilter.value === "favorites") {
+      basePokemons = favoritePokemons.value;
+    } else {
+      basePokemons = pokemons.value;
+    }
+
+    if (searchTerm.value) {
+      const lowerCaseSearchTerm = searchTerm.value.toLowerCase();
+      return basePokemons.filter((pokemon) =>
+        pokemon.name.toLowerCase().includes(lowerCaseSearchTerm)
+      );
+    }
+
+    return basePokemons;
   });
 
   const setSearchTerm = (term) => {
     searchTerm.value = term;
   };
 
+  const setFilter = (filterType) => {
+    currentFilter.value = filterType;
+  };
+
   const loadFavoritesFromLocalStorage = () => {
-    const storedFavorites = localStorage.getItem('favoritePokemons');
+    const storedFavorites = localStorage.getItem("favoritePokemons");
+
     try {
       if (storedFavorites) {
         const parsed = JSON.parse(storedFavorites);
+
         if (Array.isArray(parsed)) {
           favoritePokemons.value = parsed;
         } else {
-          console.warn("Stored favorites in localStorage was not a valid array, resetting to empty.");
+          console.warn(
+            "Stored favorites in localStorage was not a valid array, resetting to empty."
+          );
           favoritePokemons.value = [];
         }
       } else {
@@ -50,7 +76,10 @@ export const usePokemonStore = defineStore('pokemon', () => {
   };
 
   const saveFavoritesToLocalStorage = () => {
-    localStorage.setItem('favoritePokemons', JSON.stringify(favoritePokemons.value));
+    localStorage.setItem(
+      "favoritePokemons",
+      JSON.stringify(favoritePokemons.value)
+    );
   };
 
   const fetchPokemons = async () => {
@@ -58,34 +87,44 @@ export const usePokemonStore = defineStore('pokemon', () => {
     error.value = null;
 
     try {
-      const urlToFetch = nextUrl.value || `https://pokeapi.co/api/v2/pokemon?limit=50`;
+      const urlToFetch =
+        nextUrl.value || `https://pokeapi.co/api/v2/pokemon?limit=50`;
 
       const data = await fetchPokemonList(urlToFetch);
       const newPokemons = data.results;
       nextUrl.value = data.next;
 
-      console.log(data)
-
       const detailedPokemonsPromises = newPokemons.map(async (p) => {
         const details = await fetchPokemonDetailsByName(p.name);
+
         if (!details) {
-          console.warn(`[fetchPokemons] No se encontraron detalles válidos para ${p.name}. Este Pokémon será omitido.`);
+          console.warn(
+            `[fetchPokemons] No se encontraron detalles válidos para ${p.name}. Este Pokémon será omitido.`
+          );
           return null;
         }
-        const imageUrl = details.sprites?.other?.['official-artwork']?.front_default || details.sprites?.front_default || null;
+
+        const imageUrl =
+          details.sprites?.other?.["official-artwork"]?.front_default ||
+          details.sprites?.front_default ||
+          null;
         return {
           id: details.id,
           name: details.name,
           image: imageUrl,
-          types: Array.isArray(details.types) ? details.types.map(t => t.type.name) : [],
-          abilities: Array.isArray(details.abilities) ? details.abilities.map(a => a.ability.name) : [],
+          types: Array.isArray(details.types)
+            ? details.types.map((t) => t.type.name)
+            : [],
+          abilities: Array.isArray(details.abilities)
+            ? details.abilities.map((a) => a.ability.name)
+            : [],
           weight: details.weight,
           height: details.height,
-        }
+        };
       });
 
       const detailedPokemons = await Promise.all(detailedPokemonsPromises);
-      const validDetailedPokemons = detailedPokemons.filter(p => p !== null);
+      const validDetailedPokemons = detailedPokemons.filter((p) => p !== null);
 
       pokemons.value.push(...validDetailedPokemons);
     } catch (err) {
@@ -100,13 +139,17 @@ export const usePokemonStore = defineStore('pokemon', () => {
     if (!Array.isArray(favoritePokemons.value)) {
       favoritePokemons.value = [];
     }
-    const index = favoritePokemons.value.findIndex(fav => fav.id === pokemon.id);
+
+    const index = favoritePokemons.value.findIndex(
+      (fav) => fav.id === pokemon.id
+    );
 
     if (index === -1) {
       favoritePokemons.value.push(pokemon);
     } else {
       favoritePokemons.value.splice(index, 1);
     }
+
     saveFavoritesToLocalStorage();
   };
 
@@ -117,11 +160,13 @@ export const usePokemonStore = defineStore('pokemon', () => {
     error,
     nextUrl,
     searchTerm,
+    currentFilter,
     allPokemons,
     getPokemonDetails,
     isFavorite,
     filteredPokemons,
     setSearchTerm,
+    setFilter,
     loadFavoritesFromLocalStorage,
     saveFavoritesToLocalStorage,
     fetchPokemons,
