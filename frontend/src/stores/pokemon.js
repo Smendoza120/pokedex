@@ -1,108 +1,130 @@
 import { defineStore } from "pinia";
+import { ref, computed } from "vue";
 import { fetchPokemonList, fetchPokemonDetailsByName } from "@/services/pokeapi";
 
-export const usePokemonStore = defineStore('pokemon', {
-  state: () => ({
-    pokemons: [],
-    favoritePokemons: [],
-    isLoading: false,
-    error: null,
-    nextUrl: null,
-    searchTerm: ''
-  }),
+export const usePokemonStore = defineStore('pokemon', () => {
+  const pokemons = ref([]);
+  const favoritePokemons = ref([]);
+  const isLoading = ref(false);
+  const error = ref(null);
+  const nextUrl = ref(null);
+  const searchTerm = ref('');
 
-  getters: {
-    allPokemons: (state) => state.pokemons,
-    getPokemonDetails: (state) => (name) => state.pokemons.find(p => p.name === name),
-    favoritePokemons: (state) => state.favoritePokemons,
-    isFavorite: (state) => (pokemonName) => state.favoritePokemons.some(fav => fav.name === pokemonName),
-    filteredPokemons: (state) => {
-      if (!state.searchTerm) {
-        return state.pokemons
-      }
-
-      const lowerCaseSearchTerm = state.searchTerm.toLowerCase();
-      return state.pokemons.filter(pokemon => {
-        pokemon.name.toLowerCase().includes(lowerCaseSearchTerm);
-      })
+  const allPokemons = computed(() => pokemons.value);
+  const getPokemonDetails = computed(() => (name) => pokemons.value.find(p => p.name === name));
+  const isFavorite = computed(() => (pokemonId) => {
+    return Array.isArray(favoritePokemons.value) && favoritePokemons.value.some(fav => fav.id === pokemonId);
+  });
+  const filteredPokemons = computed(() => {
+    if (!searchTerm.value) {
+      return pokemons.value;
     }
-  },
+    const lowerCaseSearchTerm = searchTerm.value.toLowerCase();
+    return pokemons.value.filter(pokemon =>
+      pokemon.name.toLowerCase().includes(lowerCaseSearchTerm)
+    );
+  });
 
-  actions: {
-    setSearchTerm(term) {
-      this.searchTerm = term;
-      console.log("term :D: ", term)
-    },
+  const setSearchTerm = (term) => {
+    searchTerm.value = term;
+  };
 
-    async loadFavoritesFromLocalStorage() {
-      const storedFavorites = localStorage.getItem('favoritePokemons');
-
+  const loadFavoritesFromLocalStorage = () => {
+    const storedFavorites = localStorage.getItem('favoritePokemons');
+    try {
       if (storedFavorites) {
-        this.favoritePokemons = JSON.parse(storedFavorites);
-      }
-    },
-
-    saveFavoritesToLocalStorage() {
-      localStorage.setItem('favoritePokemons', JSON.stringify(this.favoritePokemons));
-    },
-
-    async fetchPokemons() {
-      if (this.pokemons.length > 0 && !this.nextUrl) return;
-
-      this.isLoading = true;
-      this.error = null;
-
-      try {
-        const urlToFetch = this.nextUrl || `https://pokeapi.co/api/v2/pokemon?limit=50`;
-
-        const data = await fetchPokemonList(urlToFetch);
-        const newPokemons = data.results;
-        this.nextUrl = data.next;
-
-        const detailedPokemonsPromises = newPokemons.map(async (p) => {
-          const details = await fetchPokemonDetailsByName(p.name);
-
-          // console.log("details :D: ", p.name);
-
-          if (!details) {
-            console.warn(`[fetchPokemons] No se encontraron detalles válidos para ${p.name}. Este Pokémon será omitido.`);
-            return null;
-          }
-
-          return {
-            id: details.id,
-            name: details.name,
-            image: details.sprites?.front_default || null,
-            types: Array.isArray(details.types) ? details.types.map(t => t.type.name) : [],
-            abilities: Array.isArray(details.abilities) ? details.abilities.map(a => a.ability.name) : [],
-            weight: details.weight,
-            height: details.height,
-          }
-        });
-
-        const detailedPokemons = await Promise.all(detailedPokemonsPromises);
-        const validDetailedPokemons = detailedPokemons.filter(p => p !== null);
-
-        this.pokemons = [...this.pokemons, ...validDetailedPokemons];
-        this.loadFavoritesFromLocalStorage();
-      } catch (error) {
-        this.error = `Error al buscar pokémones: ${error.message || error}`;
-        console.error("Error completo en fetchPokemons: ", error);
-      } finally {
-        this.isLoading = false;
-      }
-    },
-
-    async toggleFavorite(pokemon) {
-      const index = this.favoritePokemons.findIndex(fav => fav.id === pokemon.id);
-
-      if (index === -1) {
-        this.favoritePokemons.push(pokemon);
+        const parsed = JSON.parse(storedFavorites);
+        if (Array.isArray(parsed)) {
+          favoritePokemons.value = parsed;
+        } else {
+          console.warn("Stored favorites in localStorage was not a valid array, resetting to empty.");
+          favoritePokemons.value = [];
+        }
       } else {
-        this.favoritePokemons.splice(index, 1);
+        favoritePokemons.value = [];
       }
-
-      this.saveFavoritesToLocalStorage();
+    } catch (e) {
+      console.error("Error parsing favorite pokemons from localStorage:", e);
+      favoritePokemons.value = [];
     }
-  }
+  };
+
+  const saveFavoritesToLocalStorage = () => {
+    localStorage.setItem('favoritePokemons', JSON.stringify(favoritePokemons.value));
+  };
+
+  const fetchPokemons = async () => {
+    isLoading.value = true;
+    error.value = null;
+
+    try {
+      const urlToFetch = nextUrl.value || `https://pokeapi.co/api/v2/pokemon?limit=50`;
+
+      const data = await fetchPokemonList(urlToFetch);
+      const newPokemons = data.results;
+      nextUrl.value = data.next;
+
+      console.log(data)
+
+      const detailedPokemonsPromises = newPokemons.map(async (p) => {
+        const details = await fetchPokemonDetailsByName(p.name);
+        if (!details) {
+          console.warn(`[fetchPokemons] No se encontraron detalles válidos para ${p.name}. Este Pokémon será omitido.`);
+          return null;
+        }
+        const imageUrl = details.sprites?.other?.['official-artwork']?.front_default || details.sprites?.front_default || null;
+        return {
+          id: details.id,
+          name: details.name,
+          image: imageUrl,
+          types: Array.isArray(details.types) ? details.types.map(t => t.type.name) : [],
+          abilities: Array.isArray(details.abilities) ? details.abilities.map(a => a.ability.name) : [],
+          weight: details.weight,
+          height: details.height,
+        }
+      });
+
+      const detailedPokemons = await Promise.all(detailedPokemonsPromises);
+      const validDetailedPokemons = detailedPokemons.filter(p => p !== null);
+
+      pokemons.value.push(...validDetailedPokemons);
+    } catch (err) {
+      error.value = `Error al buscar pokémones: ${err.message || err}`;
+      console.error("Error completo en fetchPokemons: ", err);
+    } finally {
+      isLoading.value = false;
+    }
+  };
+
+  const toggleFavorite = (pokemon) => {
+    if (!Array.isArray(favoritePokemons.value)) {
+      favoritePokemons.value = [];
+    }
+    const index = favoritePokemons.value.findIndex(fav => fav.id === pokemon.id);
+
+    if (index === -1) {
+      favoritePokemons.value.push(pokemon);
+    } else {
+      favoritePokemons.value.splice(index, 1);
+    }
+    saveFavoritesToLocalStorage();
+  };
+
+  return {
+    pokemons,
+    favoritePokemons,
+    isLoading,
+    error,
+    nextUrl,
+    searchTerm,
+    allPokemons,
+    getPokemonDetails,
+    isFavorite,
+    filteredPokemons,
+    setSearchTerm,
+    loadFavoritesFromLocalStorage,
+    saveFavoritesToLocalStorage,
+    fetchPokemons,
+    toggleFavorite,
+  };
 });
