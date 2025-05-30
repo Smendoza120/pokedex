@@ -13,10 +13,15 @@ export const usePokemonStore = defineStore("pokemon", () => {
   const nextUrl = ref(null);
   const searchTerm = ref("");
   const currentFilter = ref("all");
+  const isModalOpen = ref(false);
+  const selectedPokemon = ref(null);
+
   const allPokemons = computed(() => pokemons.value);
+
   const getPokemonDetails = computed(
     () => (name) => pokemons.value.find((p) => p.name === name)
   );
+
   const isFavorite = computed(() => (pokemonId) => {
     return (
       Array.isArray(favoritePokemons.value) &&
@@ -153,6 +158,16 @@ export const usePokemonStore = defineStore("pokemon", () => {
     saveFavoritesToLocalStorage();
   };
 
+  const openModal = (pokemon) => {
+    selectedPokemon.value = pokemon;
+    isModalOpen.value = true;
+  };
+
+  const closeModal = () => {
+    isModalOpen.value = false;
+    selectedPokemon.value = null;
+  };
+
   return {
     pokemons,
     favoritePokemons,
@@ -165,11 +180,15 @@ export const usePokemonStore = defineStore("pokemon", () => {
     getPokemonDetails,
     isFavorite,
     filteredPokemons,
+    isModalOpen,
+    selectedPokemon,
     setSearchTerm,
     setFilter,
     loadFavoritesFromLocalStorage,
     saveFavoritesToLocalStorage,
     fetchPokemons,
-    toggleFavorite,
+    toggleFavorite,    
+    openModal,
+    closeModal,
   };
 });

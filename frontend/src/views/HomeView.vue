@@ -2,6 +2,7 @@
 import { usePokemonStore } from "@/stores/pokemon";
 import FilterInput from "@/components/FilterInput.vue";
 import PokemonCard from "@/components/PokemonCard.vue";
+import PokemonModal from "@/components/PokemonModal.vue";
 import { onMounted } from "vue";
 import "primeicons/primeicons.css";
 
@@ -19,7 +20,6 @@ const showAllPokemons = () => {
 const showFavoritePokemons = () => {
   pokemonStore.setFilter("favorites");
 };
-
 </script>
 
 <template>
@@ -30,6 +30,7 @@ const showFavoritePokemons = () => {
     >
       Cargando Pokémons...
     </p>
+
     <p v-if="pokemonStore.error" class="error_message">
       {{ pokemonStore.error }}
     </p>
@@ -68,11 +69,11 @@ const showFavoritePokemons = () => {
       No hay Pokémones cargados. Haz clic en "Cargar Más Pokémons"
     </p>
 
-    <div class="filter_buttons_container">
+    <div class="buttons_container">
       <button
         @click.prevent="showAllPokemons"
         :disabled="pokemonStore.isLoading"
-        class="load_more_button"
+        class="button"
         :class="{
           'active-filter': pokemonStore.currentFilter === 'all',
           'inactive-filter': pokemonStore.currentFilter === 'favorites',
@@ -84,7 +85,7 @@ const showFavoritePokemons = () => {
       <button
         @click.prevent="showFavoritePokemons"
         :disabled="pokemonStore.isLoading"
-        class="load_more_button"
+        class="button"
         :class="{
           'active-filter': pokemonStore.currentFilter === 'favorites',
           'inactive-filter': pokemonStore.currentFilter === 'all',
@@ -93,6 +94,8 @@ const showFavoritePokemons = () => {
         <i class="pi pi-star-fill" style="font-size: 1.5rem"></i> Favorites
       </button>
     </div>
+
+    <PokemonModal />
   </div>
 </template>
 
@@ -128,20 +131,19 @@ const showFavoritePokemons = () => {
     font-weight: bold;
   }
 
-  & .filter_buttons_container {
+  & .buttons_container {
     display: flex;
     gap: 15px;
     justify-content: space-between;
     align-items: center;
 
-    & .load_more_button {
+    & .button {
       display: flex;
       align-items: center;
       justify-content: center;
       gap: 10px;
       padding: 12px 0px;
       width: 50%;
-      /* background-color: var(--color-primary-red); */
       color: white;
       border: none;
       border-radius: 30px;
@@ -166,16 +168,16 @@ const showFavoritePokemons = () => {
   }
 
   & .active-filter {
-    background-color: var(--color-primary-red); 
-    color: white; 
+    background-color: var(--color-primary-red);
+    color: white;
     font-weight: bold;
-    border: 2px solid var(--color-primary-red); 
+    border: 2px solid var(--color-primary-red);
   }
 
   & .inactive-filter {
-    background-color: #5e5e5e; 
-    color: white; 
-    border: 2px solid #5e5e5e; 
+    background-color: #5e5e5e;
+    color: white;
+    border: 2px solid #5e5e5e;
   }
 
   & .pokemon_grid {

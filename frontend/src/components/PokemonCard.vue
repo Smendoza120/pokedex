@@ -1,14 +1,16 @@
 <script setup>
-import { computed } from 'vue';
-import { usePokemonStore } from '@/stores/pokemon';
+import { computed } from "vue";
+import { usePokemonStore } from "@/stores/pokemon";
 
 const props = defineProps({
   pokemon: {
     type: Object,
     required: true,
     validator: (value) => {
-      return value && typeof value.id === "number" && typeof value.name === "string";
-    }
+      return (
+        value && typeof value.id === "number" && typeof value.name === "string"
+      );
+    },
   },
 });
 
@@ -20,18 +22,25 @@ const isCurrentPokemonFavorite = computed(() => {
 
 const toggleFavorite = () => {
   pokemonStore.toggleFavorite(props.pokemon);
-}
+};
 
+const openPokemonModal = () => {
+  pokemonStore.openModal(props.pokemon);
+};
 </script>
 
 <template>
-  <div class="pokemon_card_container">
+  <div class="pokemon_card_container" @click="openPokemonModal">
     <div class="pokemon_card">
       <h3 class="pokemon_name">{{ pokemon.name }}</h3>
 
       <div class="favorite_icon_container">
-        <span class="favorite_star" :class="{ 'is_favorite': isCurrentPokemonFavorite }" @click.stop="toggleFavorite">
-          {{ isCurrentPokemonFavorite ? '⭐' : '☆' }}
+        <span
+          class="favorite_star"
+          :class="{ is_favorite: isCurrentPokemonFavorite }"
+          @click.stop="toggleFavorite"
+        >
+          {{ isCurrentPokemonFavorite ? "⭐" : "☆" }}
         </span>
       </div>
     </div>
@@ -41,7 +50,7 @@ const toggleFavorite = () => {
 <style scoped>
 .pokemon_card_container {
   border-radius: 5px;
-  transition: .3s ease-in-out;
+  transition: 0.3s ease-in-out;
   height: 60px;
 
   &:hover {
@@ -56,7 +65,7 @@ const toggleFavorite = () => {
     align-items: center;
     padding: 0 10px;
 
-    &:hover{
+    &:hover {
       cursor: pointer;
     }
 
@@ -67,9 +76,8 @@ const toggleFavorite = () => {
     }
   }
 
-  & .favorite_icon_container{
-
-    & .favorite_star{
+  & .favorite_icon_container {
+    & .favorite_star {
       font-size: 30px;
     }
   }
