@@ -63,7 +63,9 @@ const openPokemonModal = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 10px;
+    padding: 5px 10px;
+    background: white;
+    border-radius: 5px;
 
     &:hover {
       cursor: pointer;

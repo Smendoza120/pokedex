@@ -43,7 +43,9 @@ const toggleFavoriteFromModal = () => {
 
       <div class="modal_body">
         <div class="modal_pokemon_details">
-          <p style="text-transform: capitalize;"><strong>Name:</strong> {{ pokemon.name }}</p>
+          <p style="text-transform: capitalize">
+            <strong>Name:</strong> {{ pokemon.name }}
+          </p>
           <hr class="separate" />
 
           <p><strong>Weight:</strong> {{ (pokemon.weight / 10).toFixed(1) }}</p>
@@ -167,7 +169,7 @@ const toggleFavoriteFromModal = () => {
       & .modal_pokemon_details {
         & hr {
           background: 1px solid var(--color-bg-light);
-          opacity: .3;
+          opacity: 0.3;
           border-radius: 50%;
         }
       }
@@ -179,8 +181,8 @@ const toggleFavoriteFromModal = () => {
         gap: 5px;
         font-size: 1.1rem;
 
-        & .types_pokemon{
-            text-transform: capitalize;
+        & .types_pokemon {
+          text-transform: capitalize;
         }
 
         & .pokemon_type {
@@ -275,6 +277,25 @@ const toggleFavoriteFromModal = () => {
   to {
     transform: scale(1);
     opacity: 1;
+  }
+}
+
+@media (min-width: 600px) {
+  .modal_overlay {
+    & .modal_content {
+        width: 100%;
+        max-width: 30%;
+
+        & .modal_body{
+            width: 100%;
+        }
+    }
+
+    & .modal_footer{
+        /* border: 1px solid red; */
+        justify-content: space-between;
+        padding: 0 20px;
+    }
   }
 }
 

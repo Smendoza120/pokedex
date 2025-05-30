@@ -101,10 +101,9 @@ const showFavoritePokemons = () => {
 
 <style scoped>
 .home_view_container {
-  padding: 10px;
   font-family: var(--font-family-base);
   color: var(--color-dark-gray);
-  width: 95vw;
+  width: 100vw;
   height: 100vh;
   overflow: hidden;
 
@@ -133,9 +132,16 @@ const showFavoritePokemons = () => {
 
   & .buttons_container {
     display: flex;
-    gap: 15px;
+    gap: 10px;
+    padding: 0 10px;
     justify-content: space-between;
     align-items: center;
+    box-shadow: 0px -2px 7px -2px rgba(0, 0, 0, 0.75);
+    -webkit-box-shadow: 0px -2px 7px -2px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 0px -2px 7px -2px rgba(0, 0, 0, 0.75);
+    width: 100%;
+    position: relative;
+    z-index: 100;
 
     & .button {
       display: flex;
@@ -153,6 +159,7 @@ const showFavoritePokemons = () => {
       margin-top: var(--spacing-medium);
       margin-bottom: var(--spacing-large);
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 300px;
 
       &:hover:not(:disabled) {
         filter: brightness(0.9);
@@ -187,7 +194,33 @@ const showFavoritePokemons = () => {
     justify-content: start;
     gap: 10px;
     overflow-y: auto;
-    height: 78vh;
+    height: 83vh;
+  }
+}
+
+/* responsive */
+@media (min-width: 600px) {
+  .home_view_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    & .filter_container{
+      width: 100%;
+      max-width: 60%;
+    }
+
+    & .buttons_container {
+      justify-content: center;
+      gap: 20px;
+      padding: 0;
+    }
+
+    & .pokemon_grid{
+      max-width: 60%;
+      width: 100%;
+    }
   }
 }
 </style>

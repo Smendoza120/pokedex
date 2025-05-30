@@ -1,7 +1,7 @@
 <script setup>
-import { usePokemonStore } from '@/stores/pokemon';
-import { computed } from 'vue';
-import 'primeicons/primeicons.css'
+import { usePokemonStore } from "@/stores/pokemon";
+import { computed } from "vue";
+import "primeicons/primeicons.css";
 
 const pokemonStore = usePokemonStore();
 
@@ -14,18 +14,24 @@ const searchTerm = computed({
 <template>
   <div class="filter_input_container">
     <i class="pi pi-search filter_icon"></i>
-    <input type="text" v-model="searchTerm" placeholder="Search" class="filter_input" />
+    <input
+      type="text"
+      v-model="searchTerm"
+      placeholder="Search"
+      class="filter_input"
+    />
   </div>
 </template>
 
 <style>
 .filter_input_container {
   position: relative;
-  
+  padding: 10px;
+
   & .filter_icon {
     position: absolute;
-    top: 11px;
-    left: 12px;
+    top: 21px;
+    left: 20px;
     font-size: 1rem;
     color: var(--color-light-gray);
   }
@@ -35,10 +41,10 @@ const searchTerm = computed({
     border: 1px solid var(--color-light-gray);
     background-color: var(--color-bg-extra-light);
     border-radius: 6px;
-    width: 87%;
+    width: 100%;
     font-size: 1rem;
     box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: border-color .3s ease, box-shadow .3s ease;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
     &:focus {
       border-color: var(--color-primary-red);
