@@ -20,6 +20,10 @@ const showAllPokemons = () => {
 const showFavoritePokemons = () => {
   pokemonStore.setFilter("favorites");
 };
+
+const clearSearch = () => {
+  pokemonStore.searchTerm("");
+};
 </script>
 
 <template>
@@ -47,16 +51,14 @@ const showFavoritePokemons = () => {
       />
     </div>
 
-    <p
-      v-else-if="
-        !pokemonStore.isLoading &&
-        pokemonStore.searchTerm &&
-        pokemonStore.filteredPokemons.length === 0
-      "
-      class="no_results_message"
-    >
-      No se encontraron Pokémones con ese nombre.
-    </p>
+    <div v-else-if="showNoSearchResults" class="no_results_container">
+      <p class="no_results_message">
+        No se encontraron Pokémones con ese nombre en el filtro actual.
+      </p>
+      <button @click="clearSearch" class="clear_search_button">
+        Limpiar Búsqueda
+      </button>
+    </div>
 
     <p
       v-else-if="
@@ -106,9 +108,13 @@ const showFavoritePokemons = () => {
   width: 100vw;
   height: 100vh;
   overflow: hidden;
+  position: relative;
 
   & .filter_container {
     margin-bottom: 10px;
+    position: absolute;
+    top: 0;
+    width: 100%;
   }
 
   & .loading_message,
@@ -142,6 +148,10 @@ const showFavoritePokemons = () => {
     width: 100%;
     position: relative;
     z-index: 100;
+    background: white;
+    position: absolute;
+    bottom: 0;
+    left: 0;
 
     & .button {
       display: flex;
@@ -188,13 +198,14 @@ const showFavoritePokemons = () => {
   }
 
   & .pokemon_grid {
+    margin-top: 60px;
     padding: 0 10px;
     display: flex;
     flex-direction: column;
     justify-content: start;
     gap: 10px;
     overflow-y: auto;
-    height: 83vh;
+    height: 80vh;
   }
 }
 
@@ -206,9 +217,10 @@ const showFavoritePokemons = () => {
     justify-content: center;
     align-items: center;
 
-    & .filter_container{
+    & .filter_container {
       width: 100%;
       max-width: 60%;
+      left: 20%;
     }
 
     & .buttons_container {
@@ -217,9 +229,11 @@ const showFavoritePokemons = () => {
       padding: 0;
     }
 
-    & .pokemon_grid{
+    & .pokemon_grid {
+      height: 83vh;
       max-width: 60%;
       width: 100%;
+      margin-top: -50px;
     }
   }
 }

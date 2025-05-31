@@ -30,7 +30,6 @@ const toggleFavoriteFromModal = () => {
   >
     <div class="modal_content">
       <button class="close_button" @click="close">
-        <!-- <i class="pi pi-times" style="font-size: 1.5rem"></i> -->
       </button>
 
       <div class="modal_header">
@@ -103,7 +102,7 @@ const toggleFavoriteFromModal = () => {
     padding: 0;
     border-radius: 8px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
-    width: 80%; /*50% en responsive */
+    width: 80%;
     max-width: 90vw;
     max-height: 90vh;
     overflow-y: auto;
@@ -280,6 +279,7 @@ const toggleFavoriteFromModal = () => {
   }
 }
 
+/* responsive */
 @media (min-width: 600px) {
   .modal_overlay {
     & .modal_content {
@@ -292,65 +292,9 @@ const toggleFavoriteFromModal = () => {
     }
 
     & .modal_footer{
-        /* border: 1px solid red; */
         justify-content: space-between;
         padding: 0 20px;
     }
   }
-}
-
-.pokemon_type.grass {
-  background-color: #7ac74c;
-}
-.pokemon_type.fire {
-  background-color: #ee8130;
-}
-.pokemon_type.water {
-  background-color: #6390f0;
-}
-.pokemon_type.bug {
-  background-color: #a6b91a;
-}
-.pokemon_type.normal {
-  background-color: #a8a77a;
-}
-.pokemon_type.poison {
-  background-color: #a33ea1;
-}
-.pokemon_type.electric {
-  background-color: #f7d02c;
-}
-.pokemon_type.ground {
-  background-color: #e2bf65;
-}
-.pokemon_type.fairy {
-  background-color: #ddaecf;
-}
-.pokemon_type.fighting {
-  background-color: #c22e28;
-}
-.pokemon_type.psychic {
-  background-color: #f95587;
-}
-.pokemon_type.rock {
-  background-color: #b6a136;
-}
-.pokemon_type.ghost {
-  background-color: #735797;
-}
-.pokemon_type.ice {
-  background-color: #96d9d6;
-}
-.pokemon_type.dragon {
-  background-color: #6f35fc;
-}
-.pokemon_type.steel {
-  background-color: #b7b7ce;
-}
-.pokemon_type.dark {
-  background-color: #705746;
-}
-.pokemon_type.flying {
-  background-color: #a98ff3;
 }
 </style>
