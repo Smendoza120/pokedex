@@ -287,7 +287,7 @@ const clearSearch = () => {
       height: 83vh;
       max-width: 60%;
       width: 100%;
-      margin-top: -50px;
+      margin-top: -40px;
     }
   }
 }
