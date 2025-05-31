@@ -51,13 +51,32 @@ const clearSearch = () => {
       />
     </div>
 
-    <div v-else-if="showNoSearchResults" class="no_results_container">
-      <p class="no_results_message">
-        No se encontraron Pokémones con ese nombre en el filtro actual.
+    <div
+      v-else-if="
+        !pokemonStore.isLoading &&
+        pokemonStore.searchTerm &&
+        pokemonStore.filteredPokemons.length === 0
+      "
+      class="no_results_message"
+    >
+      <h3
+        style="
+          color: var(--color-dark-gray);
+          font-size: 35px;
+          font-family: var(--font-family-base);
+        "
+      >
+        Uh-oh!
+      </h3>
+      <p
+        style="
+          color: var(--color-medium-gray);
+          font-family: var(--font-family-base);
+        "
+      >
+        You look lost on your journey!
       </p>
-      <button @click="clearSearch" class="clear_search_button">
-        Limpiar Búsqueda
-      </button>
+      <button class="button" @click.prevent="clearSearch">Go back home</button>
     </div>
 
     <p
@@ -119,7 +138,6 @@ const clearSearch = () => {
 
   & .loading_message,
   & .error_message,
-  & .no_results_message,
   & .no_pokemons_message {
     text-align: center;
     margin-top: var(--spacing-medium);
@@ -127,6 +145,37 @@ const clearSearch = () => {
     color: var(--color-medium-gray);
     padding: var(--spacing-small);
     border-radius: var(--border-radius-base);
+  }
+
+  & .no_results_message {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+
+    position: absolute;
+    top: 10%;
+    left: 25%;
+
+    & .button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 12px 0px;
+      color: white;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+      margin-top: var(--spacing-medium);
+      margin-bottom: var(--spacing-large);
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      background: var(--color-primary-red);
+      padding: 10px;
+    }
   }
 
   & .error_message {
@@ -221,6 +270,11 @@ const clearSearch = () => {
       width: 100%;
       max-width: 60%;
       left: 20%;
+    }
+
+    & .no_results_message {
+      top: 10%;
+      left: 43%;
     }
 
     & .buttons_container {
