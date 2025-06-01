@@ -46,7 +46,7 @@ const copyPokemonDetails = async () => {
 <template>
   <div v-if="pokemonStore.isModalOpen && pokemon" class="modal_overlay" @click.self="close">
     <div class="modal_content">
-      <button class="close_button" @click="close">
+      <button class="close_button" @click.stop="close">
       </button>
 
       <div class="modal_header">
