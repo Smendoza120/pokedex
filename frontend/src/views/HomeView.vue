@@ -22,16 +22,14 @@ const showFavoritePokemons = () => {
 };
 
 const clearSearch = () => {
-  pokemonStore.searchTerm("");
+  pokemonStore.setSearchTerm("");
+  pokemonStore.setFilter("all");
 };
 </script>
 
 <template>
   <div class="home_view_container">
-    <p
-      v-if="pokemonStore.isLoading && pokemonStore.allPokemons.length === 0"
-      class="loading_message"
-    >
+    <p v-if="pokemonStore.isLoading && pokemonStore.allPokemons.length === 0" class="loading_message">
       Cargando Pokémons...
     </p>
 
@@ -44,74 +42,50 @@ const clearSearch = () => {
     </div>
 
     <div v-if="pokemonStore.filteredPokemons.length" class="pokemon_grid">
-      <PokemonCard
-        v-for="pokemon in pokemonStore.filteredPokemons"
-        :key="pokemon.id"
-        :pokemon="pokemon"
-      />
+      <PokemonCard v-for="pokemon in pokemonStore.filteredPokemons" :key="pokemon.id" :pokemon="pokemon" />
     </div>
 
-    <div
-      v-else-if="
-        !pokemonStore.isLoading &&
-        pokemonStore.searchTerm &&
-        pokemonStore.filteredPokemons.length === 0
-      "
-      class="no_results_message"
-    >
-      <h3
-        style="
+    <div v-else-if="
+      !pokemonStore.isLoading &&
+      pokemonStore.searchTerm &&
+      pokemonStore.filteredPokemons.length === 0
+    " class="no_results_message">
+      <h3 style="
           color: var(--color-dark-gray);
           font-size: 35px;
           font-family: var(--font-family-base);
-        "
-      >
+        ">
         Uh-oh!
       </h3>
-      <p
-        style="
+      <p style="
           color: var(--color-medium-gray);
           font-family: var(--font-family-base);
-        "
-      >
+        ">
         You look lost on your journey!
       </p>
       <button class="button" @click.prevent="clearSearch">Go back home</button>
     </div>
 
-    <p
-      v-else-if="
-        !pokemonStore.isLoading &&
-        !pokemonStore.error &&
-        pokemonStore.allPokemons.length === 0
-      "
-      class="no_pokemons_message"
-    >
+    <p v-else-if="
+      !pokemonStore.isLoading &&
+      !pokemonStore.error &&
+      pokemonStore.allPokemons.length === 0
+    " class="no_pokemons_message">
       No hay Pokémones cargados. Haz clic en "Cargar Más Pokémons"
     </p>
 
     <div class="buttons_container">
-      <button
-        @click.prevent="showAllPokemons"
-        :disabled="pokemonStore.isLoading"
-        class="button"
-        :class="{
-          'active-filter': pokemonStore.currentFilter === 'all',
-          'inactive-filter': pokemonStore.currentFilter === 'favorites',
-        }"
-      >
+      <button @click.prevent="showAllPokemons" :disabled="pokemonStore.isLoading" class="button" :class="{
+        'active-filter': pokemonStore.currentFilter === 'all',
+        'inactive-filter': pokemonStore.currentFilter === 'favorites',
+      }">
         <i class="pi pi-list" style="font-size: 1.5rem"></i> All
       </button>
 
-      <button
-        @click.prevent="showFavoritePokemons"
-        :disabled="pokemonStore.isLoading"
-        class="button"
-        :class="{
-          'active-filter': pokemonStore.currentFilter === 'favorites',
-          'inactive-filter': pokemonStore.currentFilter === 'all',
-        }"
-      >
+      <button @click.prevent="showFavoritePokemons" :disabled="pokemonStore.isLoading" class="button" :class="{
+        'active-filter': pokemonStore.currentFilter === 'favorites',
+        'inactive-filter': pokemonStore.currentFilter === 'all',
+      }">
         <i class="pi pi-star-fill" style="font-size: 1.5rem"></i> Favorites
       </button>
     </div>
