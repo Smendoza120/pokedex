@@ -239,6 +239,7 @@ const clearSearch = () => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    height: 100vh;
 
     & .filter_container {
       width: 100%;
