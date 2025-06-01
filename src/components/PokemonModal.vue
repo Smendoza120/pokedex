@@ -20,24 +20,37 @@ const toggleFavoriteFromModal = () => {
     pokemonStore.toggleFavorite(pokemon.value);
   }
 };
+
+const copyPokemonDetails = async () => {
+  if (!pokemon.value) {
+    return;
+  }
+
+  const detailsToCopy = [
+    `Name: ${pokemon.value.name}`,
+    `Weight: ${(pokemon.value.weight / 10).toFixed(1)} kg`,
+    `Height: ${(pokemon.value.height / 10).toFixed(1)} m`,
+    `Types: ${pokemon.value.types.join(", ")}`,
+    `Abilities: ${pokemon.value.abilities?.join(", ") || 'N/A'}`
+  ].join(", ");
+
+  try {
+    await navigator.clipboard.writeText(detailsToCopy);
+  } catch (error) {
+    console.error("Error al copiar al portapapeles:", error);
+    alert("No se pudo copiar automáticamente. Intenta copiar manualmente: " + detailsToCopy);
+  }
+}
 </script>
 
 <template>
-  <div
-    v-if="pokemonStore.isModalOpen && pokemon"
-    class="modal_overlay"
-    @click.self="close"
-  >
+  <div v-if="pokemonStore.isModalOpen && pokemon" class="modal_overlay" @click.self="close">
     <div class="modal_content">
       <button class="close_button" @click="close">
       </button>
 
       <div class="modal_header">
-        <img
-          :src="pokemon.image"
-          :alt="pokemon.name"
-          class="modal_pokemon_image"
-        />
+        <img :src="pokemon.image" :alt="pokemon.name" class="modal_pokemon_image" />
       </div>
 
       <div class="modal_body">
@@ -57,8 +70,8 @@ const toggleFavoriteFromModal = () => {
 
           <div class="modal_types">
             <strong>Types:</strong>
-            <p v-for="type in pokemon.types" :key="type" class="types_pokemon">
-              {{ type }}
+            <p v-for="(type, index) in pokemon.types" :key="type" class="types_pokemon">
+              {{ type }}<span v-if="index < pokemon.types.length - 1">,</span>
             </p>
           </div>
           <hr />
@@ -66,17 +79,13 @@ const toggleFavoriteFromModal = () => {
       </div>
 
       <div class="modal_footer">
-        <button class="button" style="cursor: pointer;">Share to my friends</button>
+        <button class="button" style="cursor: pointer;" @click.prevent="copyPokemonDetails">Share to my friends</button>
 
         <button @click="toggleFavoriteFromModal" class="modal_favorite_button">
-          <i
-            class="pi"
-            :class="isCurrentPokemonFavorite ? 'pi-star-fill' : 'pi-star'"
-            :style="{
-              color: isCurrentPokemonFavorite ? 'gold' : 'gray',
-              fontSize: '1.8rem',
-            }"
-          ></i>
+          <i class="pi" :class="isCurrentPokemonFavorite ? 'pi-star-fill' : 'pi-star'" :style="{
+            color: isCurrentPokemonFavorite ? 'gold' : 'gray',
+            fontSize: '1.8rem',
+          }"></i>
         </button>
       </div>
     </div>
@@ -273,6 +282,7 @@ const toggleFavoriteFromModal = () => {
     transform: scale(0.9);
     opacity: 0;
   }
+
   to {
     transform: scale(1);
     opacity: 1;
@@ -283,17 +293,17 @@ const toggleFavoriteFromModal = () => {
 @media (min-width: 600px) {
   .modal_overlay {
     & .modal_content {
-        width: 100%;
-        max-width: 30%;
+      width: 100%;
+      max-width: 30%;
 
-        & .modal_body{
-            width: 100%;
-        }
+      & .modal_body {
+        width: 100%;
+      }
     }
 
-    & .modal_footer{
-        justify-content: space-between;
-        padding: 0 20px;
+    & .modal_footer {
+      justify-content: space-between;
+      padding: 0 20px;
     }
   }
 }

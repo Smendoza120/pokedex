@@ -99,7 +99,8 @@ const clearSearch = () => {
   font-family: var(--font-family-base);
   color: var(--color-dark-gray);
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
+  min-height: 100dvh;
   overflow: hidden;
   position: relative;
 
@@ -172,7 +173,7 @@ const clearSearch = () => {
     position: relative;
     z-index: 100;
     background: white;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
 
@@ -223,6 +224,7 @@ const clearSearch = () => {
   & .pokemon_grid {
     margin-top: 65px;
     padding: 0 10px;
+    padding-bottom: 80px;
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -239,7 +241,6 @@ const clearSearch = () => {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    height: 100vh;
 
     & .filter_container {
       width: 100%;
