@@ -46,8 +46,10 @@ const copyPokemonDetails = async () => {
 <template>
   <div v-if="pokemonStore.isModalOpen && pokemon" class="modal_overlay" @click.self="close">
     <div class="modal_content">
-      <button class="close_button" @click.stop="close">
-      </button>
+      <div class="close_button_container">
+        <button class="close_button" @click.stop="close">
+        </button>
+      </div>
 
       <div class="modal_header">
         <img :src="pokemon.image" :alt="pokemon.name" class="modal_pokemon_image" />
@@ -124,23 +126,31 @@ const copyPokemonDetails = async () => {
     animation: scaleIn 0.3s ease-out;
     overflow: hidden;
 
-    & .close_button {
+    & .close_button_container {
       position: absolute;
       top: 10px;
       right: 10px;
       background: none;
-      border: none;
       cursor: pointer;
-      font-size: 1.5rem;
-      color: var(--color-dark-gray);
       transition: color 0.2s ease;
-      width: 25px;
-      height: 25px;
-      background-image: url("../assets/images/closeIcon.png");
-      background-position: center center;
-      background-repeat: no-repeat;
-      background-size: cover;
       z-index: 1000;
+
+      & .close_button {
+        position: relative;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 1.5rem;
+        color: var(--color-dark-gray);
+        transition: color 0.2s ease;
+        width: 25px;
+        height: 25px;
+        background-image: url("../assets/images/closeIcon.png");
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        z-index: 1000;
+      }
     }
 
     & .modal_header {
