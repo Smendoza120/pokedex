@@ -66,7 +66,7 @@ const toggleFavoriteFromModal = () => {
       </div>
 
       <div class="modal_footer">
-        <button class="button">Share to my friends</button>
+        <button class="button" style="cursor: pointer;">Share to my friends</button>
 
         <button @click="toggleFavoriteFromModal" class="modal_favorite_button">
           <i

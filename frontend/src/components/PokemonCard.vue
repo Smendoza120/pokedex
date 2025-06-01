@@ -34,14 +34,9 @@ const openPokemonModal = () => {
     <div class="pokemon_card">
       <h3 class="pokemon_name">{{ pokemon.name }}</h3>
 
-      <div class="favorite_icon_container">
-        <span
-          class="favorite_star"
-          :class="{ is_favorite: isCurrentPokemonFavorite }"
-          @click.stop="toggleFavorite"
-        >
-          {{ isCurrentPokemonFavorite ? "⭐" : "☆" }}
-        </span>
+      <div class="pokemon_favorite_icon_container">
+        <i class="pi pi-star-fill pokemon_favorite_star" :class="{ 'pokemon_is_favorite': isCurrentPokemonFavorite }"
+          @click.stop="toggleFavorite"></i>
       </div>
     </div>
   </div>
@@ -51,7 +46,7 @@ const openPokemonModal = () => {
 .pokemon_card_container {
   border-radius: 5px;
   transition: 0.3s ease-in-out;
-  height: 60px;
+  padding: 10px 0;
 
   &:hover {
     box-shadow: -5px 5px 7px -1px rgba(0, 0, 0, 0.5);
@@ -78,9 +73,16 @@ const openPokemonModal = () => {
     }
   }
 
-  & .favorite_icon_container {
-    & .favorite_star {
-      font-size: 30px;
+  & .pokemon_favorite_icon_container {
+    & .pokemon_favorite_star {
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: var(--color-light-gray);
+      transition: color .2s ease;
+    }
+
+    & .pokemon_favorite_star.pokemon_is_favorite {
+      color: var(--color-accent-orange);
     }
   }
 }
