@@ -4,7 +4,7 @@ import HomeView from "@/views/HomeView.vue";
 import LoadingSpinner from "@/components/LoadingSpinner.vue";
 
 const router = createRouter({
-  history: createWebHistory("#"),
+  history: createWebHistory(),
   routes: [
     {
       path: "/",
