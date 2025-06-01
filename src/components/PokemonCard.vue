@@ -46,7 +46,6 @@ const openPokemonModal = () => {
 .pokemon_card_container {
   border-radius: 5px;
   transition: 0.3s ease-in-out;
-  padding: 10px 0;
 
   &:hover {
     box-shadow: -5px 5px 7px -1px rgba(0, 0, 0, 0.5);
@@ -58,7 +57,7 @@ const openPokemonModal = () => {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 10px;
+    padding: 10px 10px;
     background: white;
     border-radius: 5px;
 

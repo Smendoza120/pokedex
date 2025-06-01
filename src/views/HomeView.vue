@@ -221,7 +221,7 @@ const clearSearch = () => {
   }
 
   & .pokemon_grid {
-    margin-top: 60px;
+    margin-top: 65px;
     padding: 0 10px;
     display: flex;
     flex-direction: column;
