@@ -2,13 +2,13 @@
 
 ## Descripción
 
-Este proyecto es una Pokedex web responsiva desarrollada con Vue 3, utilizando Vite como herramienta de build y despliegue en GitHub Pages. Permite explorar, buscar y compartir información de Pokémon, así como gestionar favoritos. El diseño está optimizado para dispositivos móviles y de escritorio.
+Este proyecto es una Pokedex la cual fue desarrollada con Vue 3, utilizando Vite como herramienta de build y despliegue en GitHub Pages. Permite explorar, buscar y compartir información de Pokémon, así como gestionar favoritos. El diseño está optimizado para dispositivos móviles y de escritorio.
 
 ---
 
 ## Tecnologías utilizadas
 
-- **[Vue 3](https://vuejs.org/):** Framework progresivo para la construcción de interfaces de usuario.
+- **[Vue 3](https://vuejs.org/):** Framework para la construcción de interfaces de usuario.
 - **[Vite](https://vitejs.dev/):** Herramienta de build rápida para proyectos frontend modernos.
 - **[Vue Router](https://router.vuejs.org/):** Enrutador oficial para Vue.js.
 - **[Pinia](https://pinia.vuejs.org/):** Store de estado global para Vue 3.
