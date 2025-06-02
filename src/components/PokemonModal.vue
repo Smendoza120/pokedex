@@ -38,7 +38,6 @@ const copyPokemonDetails = async () => {
     await navigator.clipboard.writeText(detailsToCopy);
   } catch (error) {
     console.error("Error al copiar al portapapeles:", error);
-    alert("No se pudo copiar automáticamente. Intenta copiar manualmente: " + detailsToCopy);
   }
 }
 </script>
@@ -133,7 +132,7 @@ const copyPokemonDetails = async () => {
       background: none;
       cursor: pointer;
       transition: color 0.2s ease;
-      z-index: 1000;
+      z-index: 1002;
 
       & .close_button {
         position: relative;
@@ -149,7 +148,8 @@ const copyPokemonDetails = async () => {
         background-position: center center;
         background-repeat: no-repeat;
         background-size: cover;
-        z-index: 1000;
+        z-index: 1;
+        padding: 0;
       }
     }
 

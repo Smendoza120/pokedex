@@ -99,15 +99,14 @@ const clearSearch = () => {
   font-family: var(--font-family-base);
   color: var(--color-dark-gray);
   width: 100vw;
-  height: 100dvh;
   min-height: 100dvh;
-  overflow: hidden;
+  min-height: 100dvh;
   position: relative;
 
   & .filter_container {
     margin-bottom: 10px;
     position: absolute;
-    top: 0;
+    top: -64px;
     width: 100%;
   }
 
@@ -224,7 +223,8 @@ const clearSearch = () => {
   & .pokemon_grid {
     margin-top: 65px;
     padding: 0 10px;
-    padding-bottom: 80px;
+    padding-bottom: 30px;
+    /*//pc 80 */
     display: flex;
     flex-direction: column;
     justify-content: start;
@@ -246,6 +246,7 @@ const clearSearch = () => {
       width: 100%;
       max-width: 60%;
       left: 20%;
+      top: 0;
     }
 
     & .no_results_message {
@@ -263,7 +264,9 @@ const clearSearch = () => {
       height: 83vh;
       max-width: 60%;
       width: 100%;
-      margin-top: -40px;
+      margin-top: -22px;
+      margin-bottom: 0px;
+      max-height: 77vh;
     }
   }
 }
