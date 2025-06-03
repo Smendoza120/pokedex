@@ -28,7 +28,7 @@ Este proyecto es una Pokedex la cual fue desarrollada con Vue 3, utilizando Vite
   - `/router` — Configuración de rutas con Vue Router
   - `/stores` — Gestión de estado global con Pinia
   - `/assets` — Imágenes, íconos y estilos globales
-  - `/services` — Llamadas a la API
+  - `/services` — Llamadas a la API con Axios
 
 ### Arquitectura de Software
 
