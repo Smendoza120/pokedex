@@ -1,4 +1,9 @@
+//? Importacion de la libreria pinia, esta funciona para generar estados globales, por lo que combinado con la reactividad de Vue usando el .ref, de esta manera actualizamos las variables de manera reactiva.
+//TODO: Reactividad: Realizar cambios de manera inmediata
 import { defineStore } from "pinia";
+
+//? Importamos 2 funcionalidades de Vue:
+//? Ref: Usamos la funcionalidad ref para convertir nuestras variables en reactivas
 import { ref, computed } from "vue";
 import {
   fetchPokemonList,

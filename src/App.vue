@@ -20,6 +20,7 @@ watch(() => pokemonStore.isModalOpen, (isOpen) => {
 
 <template>
   <div id="app" style="height: 100vh; overflow: hidden;">
+    <!-- Se agrega el componente el cual contiene la configuracion del enrutado del aplicativo -->
     <RouterView />
   </div>
 </template>
