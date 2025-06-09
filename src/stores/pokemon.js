@@ -88,13 +88,20 @@ export const usePokemonStore = defineStore("pokemon", () => {
     currentFilter.value = filterType;
   };
 
+  //? Funcion que recupera la lista de los pokemones favoritos, si tenemos datos validos lo agregamos al estado reactivo, si no se arroja un error y se envia un array vacio
   const loadFavoritesFromLocalStorage = () => {
+    //? Llamamos a los datos del localstorage con la clave favoritePokemons 
     const storedFavorites = localStorage.getItem("favoritePokemons");
 
+    //? Usamos un TryCatch para la manipulacion de un posible error, si encuentra un error, lo visualizara por consola y dejara el valor de la variable reactiva favoritePokemons con un array vacio
     try {
+      //? Validacion para verificar si contamos con datos en el localStorage, de no haber datos, se deja el array vacio
       if (storedFavorites) {
+        //? Variable que almacenara la conversion de un string a un array
         const parsed = JSON.parse(storedFavorites);
 
+        //? Verificamos que sea un array y le damos el valor del array convertido a nuestra variable reactiva favoritePokemons.
+        //? Si no es un array dejamos el array vacio y adicionalmente informara al usuario del error
         if (Array.isArray(parsed)) {
           favoritePokemons.value = parsed;
         } else {
@@ -112,12 +119,14 @@ export const usePokemonStore = defineStore("pokemon", () => {
     }
   };
 
+  //? Funcion para almacenar los pokemones en el localStorage
   const saveFavoritesToLocalStorage = () => {
     localStorage.setItem(
       "favoritePokemons",
       JSON.stringify(favoritePokemons.value)
     );
   };
+
 
   const fetchPokemons = async () => {
     isLoading.value = true;
@@ -145,6 +154,7 @@ export const usePokemonStore = defineStore("pokemon", () => {
           details.sprites?.other?.["official-artwork"]?.front_default ||
           details.sprites?.front_default ||
           null;
+
         return {
           id: details.id,
           name: details.name,
@@ -172,29 +182,36 @@ export const usePokemonStore = defineStore("pokemon", () => {
     }
   };
 
+  //? Funcion que agrega un pokemon a favoritos si no se encuentra en la lista, o lo elimina si ya se encuentra. Siempre actualiza el localStorage para mantener la persistencia de datos
   const toggleFavorite = (pokemon) => {
+    //? De no se un array le damos una lista vacia a los pokemones favoritos
     if (!Array.isArray(favoritePokemons.value)) {
       favoritePokemons.value = [];
     }
 
+    //? Variable que busca a un pokemon, si coincide la busqueda retorna -1
     const index = favoritePokemons.value.findIndex(
       (fav) => fav.id === pokemon.id
     );
 
+    //? Si al realizar la busqueda del indice coincide nos da -1, por lo que si esta validacion es cierta lo agregamos a nuestro array favoritePokemons, pero si ya esta en favoritos, lo eliminamos usando splice
     if (index === -1) {
       favoritePokemons.value.push(pokemon);
     } else {
       favoritePokemons.value.splice(index, 1);
     }
 
+    //? Llamamos a la funcion para almacenar el pokemon en el localstorage
     saveFavoritesToLocalStorage();
   };
 
+  //? Funcion para abrir el modal
   const openModal = (pokemon) => {
     selectedPokemon.value = pokemon;
     isModalOpen.value = true;
   };
 
+  //? Funcion para cerrar el modal
   const closeModal = () => {
     isModalOpen.value = false;
     selectedPokemon.value = null;
