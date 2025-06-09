@@ -127,11 +127,13 @@ export const usePokemonStore = defineStore("pokemon", () => {
     );
   };
 
-
+  //? Funcion para cargar los pokemones de la API
   const fetchPokemons = async () => {
+    //? Inicializa la carga en true y limpia la casilla de los errores previos
     isLoading.value = true;
     error.value = null;
 
+    //? Usamos un try catch para usar el error siempre y cuando se genere un error
     try {
       const urlToFetch =
         nextUrl.value || `https://pokeapi.co/api/v2/pokemon?limit=50`;
